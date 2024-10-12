@@ -1,5 +1,11 @@
+"use client";
+
+import { Spinner } from '@/components/spinner';
 import { Button } from '@/components/ui/button'
-import { ArrowRight } from 'lucide-react'
+import { SignUpButton } from '@clerk/nextjs';
+import { Authenticated, AuthLoading, Unauthenticated } from 'convex/react'
+import { MoveRight } from 'lucide-react'
+import Link from 'next/link';
 import React from 'react'
 
 export const Heading = () => {
@@ -17,9 +23,27 @@ export const Heading = () => {
         Sketch is where better and faster work happens.
       </h3>
 
-      <Button size="lg" className='group font-semibold'>
-        Start Sketching <ArrowRight className='size-4 ml-2 group-hover:translate-x-2 transition' />
-      </Button>
+      <AuthLoading>
+        <div className='flex justify-center items-center'>
+          <Spinner size="lg" />
+        </div>
+      </AuthLoading>
+
+      <Authenticated>
+        <Button size="lg" className='group' asChild>
+          <Link href="/documents" className='flex items-center justify-center'>
+            Start Sketching <MoveRight className='size-4 ml-2 group-hover:translate-x-2 transition' />
+          </Link>
+        </Button>
+      </Authenticated>
+
+      <Unauthenticated>
+        <SignUpButton mode="modal">
+          <Button size="lg" className='group'>
+            Get Sketch Free <MoveRight className='size-4 ml-2 group-hover:translate-x-2 transition' />
+          </Button>
+        </SignUpButton>
+      </Unauthenticated>
     </div>
   )
 }
