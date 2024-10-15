@@ -15,6 +15,7 @@ const Sidebar = () => {
   const sidebarRef = useRef<ElementRef<"aside">>(null);
   const navbarRef = useRef<ElementRef<"div">>(null);
   const [isResetting, setIsResetting] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
 
   useEffect(() => {
@@ -50,6 +51,7 @@ const Sidebar = () => {
 
   const handleMouseUp = () => {
     isResizingRef.current = false;
+    setIsResizing(false);
     document.removeEventListener("mousemove", handleMouseMove);
     document.removeEventListener("mouseup", handleMouseUp);
   }
@@ -59,6 +61,7 @@ const Sidebar = () => {
     event.stopPropagation();
 
     isResizingRef.current = true;
+    setIsResizing(true);
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
   }
@@ -105,7 +108,7 @@ const Sidebar = () => {
           onClick={collapse}
           className={cn(
             "text-muted-foreground rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 absolute top-2 right-2 opacity-0 group-hover/sidebar:opacity-100 transition px-2",
-            isMobile && "opacity-100"
+            (isMobile || isResizing) && "opacity-100"
           )}
         >
           <PanelLeftClose className='size-6' />
@@ -122,7 +125,10 @@ const Sidebar = () => {
         {!isMobile && <div
           onMouseDown={handleMouseDown}
           onClick={resetWidth}
-          className='opacity-0 group-hover/sidebar:opacity-100 transition cursor-ew-resize bg-primary/10 absolute h-full w-1 right-0 top-0'
+          className={cn(
+            "opacity-0 group-hover/sidebar:opacity-100 transition cursor-ew-resize bg-primary/10 absolute h-full w-1 right-0 top-0",
+            isResizing && "opacity-100"
+          )}
         />}
       </aside>
 
