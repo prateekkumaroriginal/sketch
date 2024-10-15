@@ -19,7 +19,7 @@ const Navbar = () => {
       "z-50 bg-background dark:bg-[#1F1F1F] fixed top-0 flex items-center w-full p-6",
       scrolled && "border-b shadow-sm"
     )}>
-      <Link className='py-2 px-4' href="/">
+      <Link className='hidden md:flex py-2 px-4' href="/">
         <Logo />
       </Link>
 

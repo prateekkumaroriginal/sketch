@@ -10,13 +10,15 @@ const font = Poppins({
 export const Logo = () => {
   return (
     <div className="hidden md:flex items-center gap-x-2">
-      <Image
-        src="/logo.svg"
-        height="16"
-        width="16"
-        alt="Logo"
-        className="dark:invert"
-      />
+      <div className="size-4">
+        <Image
+          src="/logo.svg"
+          height="16"
+          width="16"
+          alt="Logo"
+          className="dark:invert"
+        />
+      </div>
       <p className={cn("font-semibold", font.className)}>
         Sketch
       </p>
