@@ -2,10 +2,11 @@
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Menu, PanelLeftClose } from 'lucide-react';
+import { ChevronsLeft, Menu, PanelLeftClose } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import React, { ElementRef, useEffect, useRef, useState } from 'react';
+import { ElementRef, useCallback, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
+import UserItem from './UserItem';
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -32,8 +33,10 @@ const Sidebar = () => {
     }
   }, [pathname])
 
-  const handleMouseMove = (event: MouseEvent) => {
-    if (!isResizingRef) return;
+  const handleMouseMove = useCallback((event: MouseEvent) => {
+    if (!isResizingRef.current) return;
+
+    document.body.style.cursor = "ew-resize";
 
     let newWidth = event.clientX;
     if (newWidth < 240) {
@@ -47,16 +50,18 @@ const Sidebar = () => {
       navbarRef.current.style.width = `calc(100% - ${newWidth}px)`;
       navbarRef.current.style.left = `${newWidth}px`;
     }
-  }
+  }, []);
 
-  const handleMouseUp = () => {
+  const handleMouseUp = useCallback(() => {
     isResizingRef.current = false;
     setIsResizing(false);
+    document.body.style.cursor = "default";
+
     document.removeEventListener("mousemove", handleMouseMove);
     document.removeEventListener("mouseup", handleMouseUp);
-  }
+  }, [handleMouseMove]);
 
-  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleMouseDown = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -64,9 +69,9 @@ const Sidebar = () => {
     setIsResizing(true);
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
-  }
+  }, [handleMouseMove, handleMouseUp]);
 
-  const resetWidth = () => {
+  const resetWidth = useCallback(() => {
     if (sidebarRef.current && navbarRef.current) {
       setIsCollapsed(false);
       setIsResetting(true);
@@ -77,20 +82,22 @@ const Sidebar = () => {
 
       setTimeout(() => setIsResetting(false), 200);
     }
-  }
+  }, [isMobile]);
 
-  const collapse = () => {
+  const collapse = useCallback(() => {
     if (sidebarRef.current && navbarRef.current) {
-      setIsCollapsed(true);
       setIsResetting(true);
 
       sidebarRef.current.style.width = "0";
       navbarRef.current.style.width = "100%";
       navbarRef.current.style.left = "0";
 
-      setTimeout(() => setIsResetting(false), 200);
+      setTimeout(() => {
+        setIsCollapsed(true);
+        setIsResetting(false);
+      }, 200);
     }
-  }
+  }, []);
 
   return (
     <>
@@ -104,18 +111,17 @@ const Sidebar = () => {
       >
         <Button
           variant="ghost"
-          size="sm"
           onClick={collapse}
           className={cn(
-            "text-muted-foreground rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 absolute top-2 right-2 opacity-0 group-hover/sidebar:opacity-100 transition px-2",
+            "text-muted-foreground hover:text-muted-foreground rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 absolute top-2 right-2 opacity-0 group-hover/sidebar:opacity-100 transition p-1 h-fit",
             (isMobile || isResizing) && "opacity-100"
           )}
         >
-          <PanelLeftClose className='size-6' />
+          <ChevronsLeft className='size-6' />
         </Button>
 
         <div>
-          <p>Action Items</p>
+          <UserItem />
         </div>
 
         <div className='mt-4'>

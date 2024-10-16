@@ -2,7 +2,6 @@
 
 import { useScrollTop } from '@/hooks/use-scroll-top'
 import { cn } from '@/lib/utils';
-import React from 'react'
 import { Logo } from './Logo';
 import { ModeToggle } from '@/components/mode-toggle';
 import { Authenticated, AuthLoading, Unauthenticated } from 'convex/react';
