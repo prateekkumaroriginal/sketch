@@ -1,5 +1,6 @@
 "use client";
 
+import { ModeToggle } from "@/components/mode-toggle";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { SignOutButton, useUser } from "@clerk/nextjs";
@@ -28,15 +29,22 @@ const UserItem = () => {
       <DropdownMenuContent
         className="w-80 dark:bg-neutral-900 shadow-sm"
         align="start"
-        alignOffset={11}
+        alignOffset={12}
         forceMount
       >
-        <div className="flex flex-col space-y-4 p-2">
-          <p className="text-xs text-center leading-none text-muted-foreground">
-            {user?.emailAddresses[0].emailAddress}
-          </p>
+        <div className="flex flex-col px-2">
+          <div className="flex justify-between items-center">
+            <p className="text-xs text-center leading-none text-muted-foreground">
+              {user?.emailAddresses[0].emailAddress}
+            </p>
+            <div>
+            <ModeToggle />
+            </div>
+          </div>
 
-          <div className="flex items-center gap-x-2">
+          <DropdownMenuSeparator />
+
+          <div className="flex items-center gap-x-2 py-2">
             <Avatar className="size-8">
               <AvatarImage src={user?.imageUrl} />
             </Avatar>
@@ -50,6 +58,7 @@ const UserItem = () => {
         </div>
 
         <DropdownMenuSeparator />
+
         <DropdownMenuItem asChild className="group flex items-center w-full cursor-pointer text-muted-foreground focus:bg-red-500 transition">
           <SignOutButton>
             <div>
