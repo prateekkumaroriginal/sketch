@@ -1,7 +1,7 @@
 export default {
   providers: [
     {
-      domain: "https://possible-mouse-73.clerk.accounts.dev",
+      domain: "https://integral-ibex-20.clerk.accounts.dev",
       applicationID: "convex",
     },
   ]

@@ -2,11 +2,13 @@
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { ChevronsLeft, Menu, PanelLeftClose } from 'lucide-react';
+import { ChevronsLeft, Menu } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { ElementRef, useCallback, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
 import UserItem from './UserItem';
+import { useQuery } from 'convex/react';
+import { api } from '@/convex/_generated/api';
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -18,6 +20,8 @@ const Sidebar = () => {
   const [isResetting, setIsResetting] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
+
+  const documents = useQuery(api.documents.get, {});
 
   useEffect(() => {
     if (isMobile) {
@@ -125,7 +129,11 @@ const Sidebar = () => {
         </div>
 
         <div className='mt-4'>
-          <p>Documents</p>
+          <p>
+            {documents?.map((document) => (
+              <p>{document.title}</p>
+            ))}
+          </p>
         </div>
 
         {!isMobile && <div

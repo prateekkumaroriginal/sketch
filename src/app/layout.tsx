@@ -2,14 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton
-} from '@clerk/nextjs';
 import { ConvexClientProvider } from "@/components/providers/convex-provider";
+import { Toaster } from "sonner";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -59,6 +53,7 @@ export default function RootLayout({
             disableTransitionOnChange
             storageKey="sketch-theme"
           >
+            <Toaster position="bottom-right" />
             {children}
           </ThemeProvider>
         </body>
