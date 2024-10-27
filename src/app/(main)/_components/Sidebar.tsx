@@ -2,13 +2,17 @@
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { ChevronsLeft, Menu } from 'lucide-react';
+import { ChevronsLeft, Menu, PlusCircle, Search, Settings } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { ElementRef, useCallback, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
 import UserItem from './UserItem';
-import { useQuery } from 'convex/react';
+import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
+import SidebarItem from './SidebarItem';
+import { toast } from 'sonner';
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import DocumentList from './DocumentList';
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -21,7 +25,16 @@ const Sidebar = () => {
   const [isResizing, setIsResizing] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
 
-  const documents = useQuery(api.documents.get, {});
+  const createDocument = useMutation(api.documents.create);
+
+  const onCreate = () => {
+    const promise = createDocument({ title: "Untitled" });
+    toast.promise(promise, {
+      loading: "Creating a new note...",
+      success: "New note created",
+      error: "Failed to create a new note!"
+    });
+  }
 
   useEffect(() => {
     if (isMobile) {
@@ -117,7 +130,7 @@ const Sidebar = () => {
           variant="ghost"
           onClick={collapse}
           className={cn(
-            "text-muted-foreground hover:text-muted-foreground rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 absolute top-2 right-2 opacity-0 group-hover/sidebar:opacity-100 transition p-1 h-fit",
+            "text-muted-foreground hover:text-muted-foreground rounded-sm hover:bg-primary/10 dark:hover:bg-primary/10 absolute top-2.5 right-2 opacity-0 group-hover/sidebar:opacity-100 transition p-0.5 h-fit",
             (isMobile || isResizing) && "opacity-100"
           )}
         >
@@ -126,15 +139,27 @@ const Sidebar = () => {
 
         <div>
           <UserItem />
+          <SidebarItem
+            label="New Note"
+            icon={PlusCircle}
+            onClick={onCreate}
+          />
+          <SidebarItem
+            label="Settings"
+            icon={Settings}
+            onClick={() => { }}
+          />
+          <SidebarItem
+            label="Search"
+            icon={Search}
+            isSearch
+            onClick={() => { }}
+          />
         </div>
 
-        <div className='mt-4'>
-          <p>
-            {documents?.map((document) => (
-              <p>{document.title}</p>
-            ))}
-          </p>
-        </div>
+        <ScrollArea className='mt-4 mx-2 pr-3'>
+          <DocumentList />
+        </ScrollArea>
 
         {!isMobile && <div
           onMouseDown={handleMouseDown}

@@ -2,14 +2,32 @@ import { v } from "convex/values";
 import { mutation, query } from "@/convex/_generated/server";
 import { Doc, Id } from "@/convex/_generated/dataModel";
 
-export const get = query({
+export const getSidebar = query({
+  args: {
+    parentId: v.optional(v.id("documents"))
+  },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error("Not Authenticated");
     }
 
-    const documents = await ctx.db.query("documents").collect();
+    const userId = identity.subject;
+
+    const documents = ctx.db
+      .query("documents")
+      .withIndex(
+        "by_user_parent",
+        (q) => q
+          .eq("userId", userId)
+          .eq("parentId", args.parentId)
+      )
+      .filter((q) => q.
+        eq(q.field("isArchived"), false)
+      )
+      .order("desc")
+      .collect();
+
     return documents;
   }
 });
