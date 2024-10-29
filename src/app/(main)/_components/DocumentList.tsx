@@ -58,7 +58,7 @@ const DocumentList = ({
         }}
         className={cn(
           "hidden text-sm font-medium text-muted-foreground/80",
-          expanded && "last:block",
+          expanded && level !== 0 && "last:block",
           level === 0 && "hidden"
         )}
       >

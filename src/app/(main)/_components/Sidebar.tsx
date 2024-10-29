@@ -7,12 +7,13 @@ import { usePathname } from 'next/navigation';
 import { ElementRef, useCallback, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
 import UserItem from './UserItem';
-import { useMutation, useQuery } from 'convex/react';
+import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import SidebarItem from './SidebarItem';
 import { toast } from 'sonner';
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import DocumentList from './DocumentList';
+import TrashBox from './TrashBox';
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -137,7 +138,7 @@ const Sidebar = () => {
           <ChevronsLeft className='size-6' />
         </Button>
 
-        <div>
+        <div className='mb-2'>
           <UserItem />
           <SidebarItem
             label="New Note"
@@ -157,9 +158,14 @@ const Sidebar = () => {
           />
         </div>
 
-        <ScrollArea className='mt-4 mx-2 pr-3'>
+        <ScrollArea className='border-t border-primary/10 flex-grow'>
+          <div className='h-2' />
           <DocumentList />
         </ScrollArea>
+
+        <div className='py-2 border-t border-primary/10'>
+          <TrashBox isMobile={isMobile} />
+        </div>
 
         {!isMobile && <div
           onMouseDown={handleMouseDown}

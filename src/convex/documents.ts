@@ -22,9 +22,7 @@ export const getSidebar = query({
           .eq("userId", userId)
           .eq("parentId", args.parentId)
       )
-      .filter((q) => q.
-        eq(q.field("isArchived"), false)
-      )
+      .filter((q) => q.eq(q.field("isArchived"), false))
       .order("desc")
       .collect();
 
@@ -52,6 +50,167 @@ export const create = mutation({
       isArchived: false,
       isPublished: false
     });
+
+    return document;
+  }
+});
+
+export const archive = mutation({
+  args: {
+    id: v.id("documents")
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not Authenticated");
+    }
+
+    const userId = identity.subject;
+
+    const existingDocument = await ctx.db.get(args.id);
+
+    if (!existingDocument) {
+      throw new Error("Not Found");
+    }
+
+    if (userId !== existingDocument.userId) {
+      throw new Error("Unauthorized");
+    }
+
+    const recursiveArchive = async (docId: Id<"documents">) => {
+      const children = await ctx.db
+        .query("documents")
+        .withIndex(
+          "by_user_parent",
+          (q) => q
+            .eq("userId", userId)
+            .eq("parentId", docId)
+        )
+        .collect();
+
+      for (const child of children) {
+        await ctx.db.patch(child._id, {
+          isArchived: true
+        });
+
+        await recursiveArchive(child._id);
+      }
+    }
+
+    const document = await ctx.db.patch(args.id, {
+      isArchived: true
+    });
+
+    await recursiveArchive(args.id);
+
+    return document;
+  }
+});
+
+export const getTrash = query({
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const userId = identity.subject;
+
+    const documents = ctx.db
+      .query("documents")
+      .withIndex(
+        "by_user",
+        (q) => q.eq("userId", userId)
+      )
+      .filter((q) => q.eq(q.field("isArchived"), true))
+      .order("desc")
+      .collect();
+
+    return documents;
+  }
+});
+
+export const restore = mutation({
+  args: {
+    id: v.id("documents")
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const userId = identity.subject;
+
+    const existingDocument = await ctx.db.get(args.id);
+    if (!existingDocument) {
+      throw new Error("Not Found");
+    }
+
+    if (existingDocument.userId !== userId) {
+      throw new Error("Unauthorized");
+    }
+
+    const options: Partial<Doc<"documents">> = {
+      isArchived: false
+    };
+
+    const recursiveRestore = async (docId: Id<"documents">) => {
+      const children = await ctx.db
+        .query("documents")
+        .withIndex(
+          "by_user_parent",
+          (q) => q
+            .eq("userId", userId)
+            .eq("parentId", docId)
+        )
+        .collect();
+
+      for (const child of children) {
+        await ctx.db.patch(child._id, { isArchived: false });
+
+        await recursiveRestore(child._id);
+      }
+    }
+
+    if (existingDocument.parentId) {
+      const parent = await ctx.db.get(existingDocument.parentId);
+      if (parent?.isArchived) {
+        options.parentId = undefined;
+      }
+    }
+
+    const document = await ctx.db.patch(args.id, options);
+
+    await recursiveRestore(args.id);
+
+    return document;
+  }
+});
+
+export const remove = mutation({
+  args: {
+    id: v.id("documents")
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not Authenticated");
+    }
+
+    const userId = identity.subject;
+
+    const existingDocument = await ctx.db.get(args.id);
+
+    if (!existingDocument) {
+      throw new Error("Not Found");
+    }
+
+    if (userId !== existingDocument.userId) {
+      throw new Error("Unauthorized");
+    }
+
+    const document = await ctx.db.delete(args.id);
 
     return document;
   }
