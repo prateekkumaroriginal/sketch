@@ -5,6 +5,7 @@ import { useConvexAuth } from 'convex/react'
 import { redirect } from 'next/navigation';
 import React from 'react'
 import Sidebar from './_components/Sidebar';
+import { ModalProvider } from '@/components/providers/modal_provider';
 
 const MainLayout = ({ children }: {
   children: React.ReactNode
@@ -26,6 +27,7 @@ const MainLayout = ({ children }: {
   return (
     <div className='h-full flex dark:bg-[#1F1F1F]'>
       <Sidebar />
+      <ModalProvider />
       <main className='flex-1 h-full overflow-y-auto'>
         {children}
       </main>

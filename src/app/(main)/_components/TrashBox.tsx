@@ -9,8 +9,6 @@ import { Id } from "@/convex/_generated/dataModel";
 import { toast } from "sonner";
 import { Spinner } from "@/components/spinner";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { ConfirmModal } from "@/components/modals/confirm-modal";
 
 const TrashBox = ({ isMobile }: { isMobile: boolean }) => {

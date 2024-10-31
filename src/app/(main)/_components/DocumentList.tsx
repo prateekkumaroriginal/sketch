@@ -42,10 +42,8 @@ const DocumentList = ({
     return (
       <>
         <SidebarItem.Skeleton level={level} />
-        <div>
-          <SidebarItem.Skeleton level={level} />
-          <SidebarItem.Skeleton level={level} />
-        </div>
+        <SidebarItem.Skeleton level={level} />
+        <SidebarItem.Skeleton level={level} />
       </>
     )
   }
