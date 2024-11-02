@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ChevronsLeft, Menu, PlusCircle, Search, Settings } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { ElementRef, useCallback, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
 import UserItem from './UserItem';
@@ -15,11 +15,15 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import DocumentList from './DocumentList';
 import TrashBox from './TrashBox';
 import { useSearch } from '@/hooks/use-search';
+import { useModal } from '@/hooks/use-modal-store';
+import Navbar from './Navbar';
 
 const Sidebar = () => {
   const pathname = usePathname();
+  const { documentId } = useParams();
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const { onOpen } = useSearch();
+  const search = useSearch();
+  const { onOpen } = useModal();
 
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<ElementRef<"aside">>(null);
@@ -150,13 +154,13 @@ const Sidebar = () => {
           <SidebarItem
             label="Settings"
             icon={Settings}
-            onClick={() => { }}
+            onClick={() => onOpen("settings")}
           />
           <SidebarItem
             label="Search"
             icon={Search}
             isSearch
-            onClick={onOpen}
+            onClick={search.onOpen}
           />
         </div>
 
@@ -187,13 +191,21 @@ const Sidebar = () => {
           isMobile && "left-0 w-full"
         )}
       >
-        <nav className='bg-transparent px-3 py-2 w-full'>
-          {isCollapsed && <Menu
-            role='button'
-            onClick={resetWidth}
-            className='size-6 text-muted-foreground'
-          />}
-        </nav>
+        {documentId ? (
+          <Navbar
+            isCollapsed={isCollapsed}
+            onResetWidth={resetWidth}
+            isMobile={isMobile}
+          />
+        ) : (
+          <nav className='bg-transparent px-3 py-2 w-full'>
+            {isCollapsed && <Menu
+              role='button'
+              onClick={resetWidth}
+              className='size-6 text-muted-foreground'
+            />}
+          </nav>
+        )}
       </div>
     </>
   )

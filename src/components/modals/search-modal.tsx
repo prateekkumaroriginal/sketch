@@ -1,11 +1,10 @@
 import { api } from "@/convex/_generated/api";
-import { useModal } from "@/hooks/use-modal-store";
 import { useUser } from "@clerk/nextjs"
 import { useQuery } from "convex/react";
 import { CommandDialog, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";
 import { File } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSearch } from "@/hooks/use-search";
 
 export const SearchModal = () => {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
-import { SearchModal } from "../modals/search-modal";
+import { SearchModal } from "@/components/modals/search-modal";
+import { SettingsModal } from "@/components/modals/settings-modal";
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -15,6 +16,7 @@ export const ModalProvider = () => {
   return (
     <>
       <SearchModal />
+      <SettingsModal />
     </>
   )
 }
