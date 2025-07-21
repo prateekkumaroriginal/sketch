@@ -34,11 +34,11 @@ const Title = ({
     setIsEditing(false);
   }
 
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value);
+  const onInput = (value: string) => {
+    setTitle(value);
     update({
       id: initialData._id,
-      title: event.target.value || "Untitled"
+      title: value || "Untitled"
     });
   }
 
@@ -55,7 +55,7 @@ const Title = ({
         <Input
           ref={inputRef}
           onBlur={disableInput}
-          onChange={onChange}
+          onChange={(e) => onInput(e.target.value)}
           onKeyDown={onKeyDown}
           value={title}
           className="h-7 px-2 focus-visible:ring-transparent"
@@ -65,7 +65,7 @@ const Title = ({
           onClick={enableInput}
           variant="ghost"
           size="sm"
-          className="font-normal h-auto py-1"
+          className="font-normal h-auto py-1 max-w-80"
         >
           <span className="truncate">
             {initialData.title}

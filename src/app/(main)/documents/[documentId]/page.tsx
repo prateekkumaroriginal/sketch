@@ -1,7 +1,42 @@
-const DocumentIdPage = () => {
-  return (
-    <div>
+"use client";
 
+import CoverImage from "@/components/cover-image";
+import Toolbar from "@/components/toolbar";
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
+import { useQuery } from "convex/react";
+
+interface DocumentIdPageProps {
+  params: {
+    documentId: Id<"documents">;
+  }
+}
+
+const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
+  const document = useQuery(api.documents.getById, { id: params.documentId });
+
+  if (document === undefined) {
+    return <div>
+      Loading ...
+    </div>
+  }
+
+  if (document === null) {
+    return <div>
+      Not Found
+    </div>
+  }
+
+  return (
+    <div className="relative pb-40 top-[60px]">
+      <CoverImage
+        url={document.coverImage}
+      />
+      <div className="md:max-w-3xl lg:max-w-4xl mx-auto">
+        <Toolbar
+          initialData={document}
+        />
+      </div>
     </div>
   );
 }

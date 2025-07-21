@@ -5,7 +5,7 @@ import { useConvexAuth } from 'convex/react'
 import { redirect } from 'next/navigation';
 import React from 'react'
 import Sidebar from './_components/Sidebar';
-import { ModalProvider } from '@/components/providers/modal_provider';
+import { ModalProvider } from '@/components/providers/modal-provider';
 
 const MainLayout = ({ children }: {
   children: React.ReactNode

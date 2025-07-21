@@ -96,9 +96,9 @@ const PageMenu = ({
   );
 }
 
-PageMenu.Skeleton = function PageMenuSkeleton(){
+PageMenu.Skeleton = function PageMenuSkeleton() {
   return (
-    <Skeleton className="h-9 w-12"/>
+    <Skeleton className="h-9 w-12" />
   )
 }
 
