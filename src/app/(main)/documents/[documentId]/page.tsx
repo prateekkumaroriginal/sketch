@@ -5,7 +5,8 @@ import Toolbar from "@/app/(main)/_components/Toolbar";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
-import Editor from "@/components/editor";
+import { useMemo } from "react";
+import dynamic from "next/dynamic";
 
 interface DocumentIdPageProps {
   params: {
@@ -14,6 +15,7 @@ interface DocumentIdPageProps {
 }
 
 const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
+  const Editor = useMemo(() => dynamic(() => import("@/components/editor"), { ssr: false }), []);
   const document = useQuery(api.documents.getById, { id: params.documentId });
   const update = useMutation(api.documents.update);
 

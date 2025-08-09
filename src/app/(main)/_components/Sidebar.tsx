@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ChevronsLeft, Menu, PlusCircle, Search, Settings } from 'lucide-react';
-import { useParams, usePathname } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import { ElementRef, useCallback, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
 import UserItem from './UserItem';
@@ -21,6 +21,7 @@ import Navbar from './Navbar';
 const Sidebar = () => {
   const pathname = usePathname();
   const { documentId } = useParams();
+  const router = useRouter();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const search = useSearch();
   const { onOpen } = useModal();
@@ -35,7 +36,10 @@ const Sidebar = () => {
   const createDocument = useMutation(api.documents.create);
 
   const onCreate = () => {
-    const promise = createDocument({ title: "Untitled" });
+    const promise = createDocument({ title: "Untitled" })
+      .then((docId) => {
+        router.push(`/documents/${docId}`);
+      });
     toast.promise(promise, {
       loading: "Creating a new note...",
       success: "New note created",
