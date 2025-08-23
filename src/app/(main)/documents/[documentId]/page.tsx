@@ -20,8 +20,10 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
   const update = useMutation(api.documents.update);
 
   const onChange = (content: string) => {
+    if (!document) return;
+
     update({
-      id: document?._id!,
+      id: document._id,
       content
     });
   }

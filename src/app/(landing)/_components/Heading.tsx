@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { SignUpButton } from '@clerk/nextjs';
 import { Authenticated, AuthLoading, Unauthenticated } from 'convex/react'
 import { MoveRight } from 'lucide-react'
+import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react'
 
@@ -14,7 +15,10 @@ export const Heading = () => {
       <h1 className='text-3xl sm:text-4xl md:text-5xl font-bold'>
         Write down your ideas, documents & plans. Welcome to
         <span className='flex mt-2 items-center justify-center underline text-6xl sm:text-7xl md:text-8xl'>
-          <img src="/logo.svg" alt="" className='dark:invert inline-flex mr-2 size-16 sm:size-20 md:size-24' />
+          <Image
+            height={64}
+            width={64}
+            src="/logo.svg" alt="" className='dark:invert inline-flex mr-2 size-16 sm:size-20 md:size-24' />
           Sketch
         </span>
       </h1>

@@ -39,14 +39,12 @@ const CoverImageModal = () => {
   const { type, docId, isOpen, onClose, url } = useModal();
   const { edgestore } = useEdgeStore();
 
-  // const [file, setFile] = useState<File>();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isModalOpen = isOpen && type === "coverImage";
 
-  const onChange = async ({ file }: any) => {
+  const onChange = async ({ file }: { file: File }) => {
     setIsSubmitting(true);
-    // setFile(file);
 
     const res = await edgestore.publicFiles.upload({
       file,
