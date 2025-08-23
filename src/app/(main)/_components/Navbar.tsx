@@ -6,6 +6,7 @@ import { notFound, useParams } from "next/navigation";
 import Title from "./Title";
 import Banner from "./Banner";
 import PageMenu from "./PageMenu";
+import Publish from "./Publish";
 
 interface NavbarProps {
   isCollapsed: boolean;
@@ -57,10 +58,16 @@ const Navbar = ({
               </div>
             </div>
 
-            <PageMenu
-              documentId={document._id}
-              isArchived={document.isArchived}
-            />
+            <div className="flex gap-4 items-center">
+              <Publish
+                initialData={document}
+              />
+
+              <PageMenu
+                documentId={document._id}
+                isArchived={document.isArchived}
+              />
+            </div>
           </nav >
 
           {document.isArchived && (

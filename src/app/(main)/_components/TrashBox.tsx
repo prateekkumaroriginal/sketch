@@ -28,7 +28,7 @@ const TrashBox = ({ isMobile }: { isMobile: boolean }) => {
   }
 
   const onRestore = (
-    event: React.MouseEvent<any, MouseEvent>,
+    event: React.MouseEvent<HTMLElement>,
     docId: Id<"documents">
   ) => {
     event.stopPropagation();

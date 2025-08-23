@@ -16,7 +16,7 @@ const Navbar = () => {
   return (
     <div className={cn(
       "z-50 bg-background dark:bg-[#1F1F1F] fixed top-0 flex items-center w-full p-6",
-      scrolled && "border-b shadow-sm"
+      scrolled && "border-b-2 shadow-sm"
     )}>
       <Link className='hidden md:flex py-2 px-4' href="/">
         <Logo />

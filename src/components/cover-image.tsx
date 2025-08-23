@@ -47,10 +47,11 @@ const CoverImage = ({
         />
       )}
       {url && !preview && (
-        <div className="opacity-0 group-hover:opacity-100 absolute bottom-5 right-5 flex items-center gap-x-2 transition">
+        <div className="opacity-100 md:opacity-0 group-hover:opacity-100 absolute bottom-5 right-5 flex items-center gap-x-2 transition">
           <Button
             onClick={() => onOpen("coverImage", documentId as string, url)}
             size="sm"
+            className="shadow-md"
           >
             <ImageIcon className="size-4 mr-2" />
             Change Cover
@@ -58,6 +59,7 @@ const CoverImage = ({
           <Button
             onClick={onRemove}
             size="sm"
+            className="shadow-md"
           >
             <X className="size-4 mr-2" />
             Remove
